@@ -1,54 +1,247 @@
 package org.jpanda.web;
 
+import org.jpanda.ApplicationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+import static java.time.temporal.TemporalAdjusters.*;
+
+/**
+ * Posts listing controller
+ *
+ * @author T-PWK
+ */
 @Controller
 public class IndexController
 {
-    @RequestMapping("/")
-    public String index()
+    @Autowired
+    private ApplicationProperties properties;
+
+    /**
+     * Handles index (/) page
+     *
+     * @param model model passed to a view
+     * @return posts listing view
+     */
+    @RequestMapping("${panda.urls.index}")
+    public String index(final Model model)
     {
         return "index";
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}")
-    public String listByYear(@PathVariable("year") final int year)
+    /**
+     * Handles pagination of index page (e.g. /page/2)
+     *
+     * @param page  page number (1-based number)
+     * @param model model passed to a view
+     * @return posts listing view or a redirect URL
+     */
+    @RequestMapping("${panda.urls.index-page}")
+    public String indexAtPage(@PathVariable("page") final int page, final Model model)
     {
+        if (page < 2)
+        {
+            return redirectWithUrl("index");
+        }
         return "index";
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}/page/{page:\\d+}")
-    public String listByYearAtPage(@PathVariable("year") final int year, @PathVariable("page") final int page)
+    /**
+     * Handles search for posts published in a given year (e.g. /2012)
+     *
+     * @param year  year used for post search
+     * @param model model passed to a view
+     * @return posts listing view
+     */
+    @RequestMapping("${panda.urls.year}")
+    public String listByYear(@PathVariable("year") final int year, final Model model)
     {
-        return "index";
+        return postByDateRange(year, -1, -1, 0, model);
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}/{month:\\d\\d}")
-    public String listByMonth(@PathVariable("year") final int year, @PathVariable("month") final int month)
+    /**
+     * Handles search for posts published in a given year with pagination (e.g. /2012/page/2)
+     *
+     * @param year  year used for post search
+     * @param page  pagination (1-based number)
+     * @param model model passed to a view
+     * @return posts listing view or a redirect URL
+     */
+    @RequestMapping("${panda.urls.year-page}")
+    public String listByYearAtPage(@PathVariable("year") final int year, @PathVariable("page") final int page,
+                                   final Model model)
     {
-        return "index";
+        if (page < 2)
+        {
+            return redirectWithUrl("year-redirect");
+        }
+        return postByDateRange(year, -1, -1, page - 1, model);
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}/{month:\\d\\d}/page/{page:\\d+}")
+    /**
+     * Handles search for posts published in a given year and month (e.g. /2012/12 - December 2012)
+     *
+     * @param year  year used for post search
+     * @param month month used for post search
+     * @param model model passed to a view
+     * @return posts listing view
+     */
+    @RequestMapping("${panda.urls.month}")
+    public String listByMonth(@PathVariable("year") final int year, @PathVariable("month") final int month,
+                              final Model model)
+    {
+        return postByDateRange(year, month, -1, 0, model);
+    }
+
+    /**
+     * Handles search for posts published in a given year and month with pagination (e.g. /2012/12/page/2 - December
+     * 2012, page two)
+     *
+     * @param year  year used for post search
+     * @param month month used for post search
+     * @param page  pagination (1-based number)
+     * @param model model passed to a view
+     * @return posts listing view or a redirect URL
+     */
+    @RequestMapping("${panda.urls.month-page}")
     public String listByMonthAtPage(@PathVariable("year") final int year, @PathVariable("month") final int month,
-                                    @PathVariable("page") final int page)
+                                    @PathVariable("page") final int page, final Model model)
     {
-        return "index";
+        if (page < 2)
+        {
+            return redirectWithUrl("month-redirect");
+        }
+        return postByDateRange(year, month, -1, page - 1, model);
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}/{month:\\d\\d}/{day:\\d\\d}")
+    /**
+     * Handles search for posts published in a given year, month and a day (e.g. /2012/12/20 - 20th December 2012)
+     *
+     * @param year  year used for post search
+     * @param month month used for post search
+     * @param day   day used for post search
+     * @param model model passed to a view
+     * @return posts listing view
+     */
+    @RequestMapping("${panda.urls.day}")
     public String listByDay(@PathVariable("year") final int year, @PathVariable("month") final int month,
-                            @PathVariable("day") final int day)
+                            @PathVariable("day") final int day, final Model model)
+    {
+        return postByDateRange(year, month, day, 0, model);
+    }
+
+    /**
+     * Handles search for posts published in a given year, month and a day with pagination (e.g. /2012/12/20/page/2 -
+     * 20th December 2012, second page of results)
+     *
+     * @param year  year used for post search
+     * @param month month used for post search
+     * @param day   day used for post search
+     * @param page  pagination (1-based number)
+     * @param model model passed to a view
+     * @return posts listing view or a redirect URL
+     */
+    @RequestMapping("${panda.urls.day-page}")
+    public String listByDayAtPage(@PathVariable("year") final int year, @PathVariable("month") final int month,
+                                  @PathVariable("day") final int day, @PathVariable("page") final int page,
+                                  final Model model)
+    {
+        if (page < 2)
+        {
+            return redirectWithUrl("day-redirect");
+        }
+
+        return postByDateRange(year, month, day, page - 1, model);
+    }
+
+    /**
+     * Handles search for posts by label (e.g. /search/label/java)
+     *
+     * @param label label text
+     * @param model model passed to a view
+     * @return posts listing view
+     */
+    @RequestMapping("${panda.urls.labels}")
+    public String listByLabel(@PathVariable("label") final String label, final Model model)
     {
         return "index";
     }
 
-    @RequestMapping("/{year:\\d\\d\\d\\d}/{month:\\d\\d}/{day:\\d\\d}/page/{page:\\d+}")
-    public String listByDayAtPage(@PathVariable("year") final int year, @PathVariable("month") final int month,
-                                  @PathVariable("day") final int day, @PathVariable("page") final int page)
+    /**
+     * Handles pagination of search for posts by label (e.g. /search/label/java/page/2)
+     *
+     * @param label label text
+     * @param page  pagination (1-based number)
+     * @param model model passed to a view
+     * @return posts listing view or a redirect URL
+     */
+    @RequestMapping("${panda.urls.labels-page}")
+    public String listByLabelAtPage(@PathVariable("label") final String label, @PathVariable("page") final int page,
+                                    final Model model)
     {
+        if (page < 2)
+        {
+            return redirectWithUrl("labels");
+        }
+        return "index";
+    }
+
+    private String redirectWithUrl(final String key)
+    {
+        return "redirect:" + properties.getUrls().get(key);
+    }
+
+    private String allPosts(final int page, final Model model)
+    {
+//        model.addAttribute("posts",
+//                repository.findLivePosts(new PageRequest(page, pageSize, DESC, "startAt")));
+        return "index";
+    }
+
+    private String postByDateRange(final int year, final int month, final int day, final int page, final Model model)
+    {
+        LocalDateTime start = LocalDateTime.now().with(LocalTime.MIN).withYear(year);
+
+        if (month > 0)
+        {
+            start = start.withMonth(month);
+        }
+        if (day > 0)
+        {
+            start = start.withDayOfMonth(day);
+        }
+
+        LocalDateTime end = start.with(LocalTime.MAX);
+
+        if (day > 0)
+        {
+            // do nothing if day is set
+        }
+        else if (month > 0)
+        {
+            start = start.with(firstDayOfMonth());
+            end = end.with(lastDayOfMonth());
+        }
+        else
+        {
+            start = start.with(firstDayOfYear());
+            end = end.with(lastDayOfYear());
+        }
+
+        final Date startRange = Date.from(start.atZone(ZoneId.systemDefault()).toInstant());
+        final Date endRange = Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
+
+//        model.addAttribute("posts",
+//                repository.findLivePostsByDateRange(startRange, endRange, new PageRequest(page, pageSize)));
+
         return "index";
     }
 }
