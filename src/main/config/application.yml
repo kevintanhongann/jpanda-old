@@ -1,0 +1,33 @@
+panda:
+  posts-per-page: 7
+  urls:
+    index: /
+    index-page: /page/{page}
+    labels: /search/label/{label}
+    labels-page: /search/label/{label}/page/{page}
+    year: /{year:\d\d\d\d}
+    year-redirect: /{year}
+    year-page: /{year:\d\d\d\d}/page/{page:\d+}
+    month: /{year:\d\d\d\d}/{month:\d\d}
+    month-redirect: /{year}/{month}
+    month-page: /{year:\d\d\d\d}/{month:\d\d}/page/{page:\d+}
+    day: /{year:\d\d\d\d}/{month:\d\d}/{day:\d\d}
+    day-redirect: /{year}/{month}/{day}
+    day-page: /{year:\d\d\d\d}/{month:\d\d}/{day:\d\d}/page/{page:\d+}
+    slug: /{slug}
+    slug-path: /{slug}
+    slug-preview: /preview/{slug}/{code}
+    sitemap: /sitemap.xml
+spring:
+  jmx:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+liquibase:
+  change-log:
+    classpath:/changelog/db.changelog-master.xml

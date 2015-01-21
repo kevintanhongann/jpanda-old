@@ -1,0 +1,115 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="clob.type" value="longtext" dbms="mysql"/>
+    <property name="clob.type" value="text" dbms="postgresql"/>
+
+    <changeSet id="1" author="jpanda">
+        <comment>Initial setup</comment>
+
+        <!-- ### Table: content ### -->
+        <createTable tableName="content">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="${clob.type}"/>
+        </createTable>
+
+        <!-- ### Table: redirect ### -->
+        <createTable tableName="redirect">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="from_url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="to_url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint columnNames="from_url" tableName="redirect"/>
+
+        <!-- ### Table: user ### -->
+        <createTable tableName="user">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="website" type="varchar(255)"/>
+            <column name="location" type="varchar(255)"/>
+            <column name="bio" type="varchar(255)"/>
+            <column name="image" type="varchar(255)"/>
+            <column name="lead" type="bit(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- ### Table: post ### -->
+        <createTable tableName="post">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="slug" type="varchar(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="type" type="int"/>
+
+            <!-- Meta -->
+            <column name="meta_title" type="varchar(100)"/>
+            <column name="meta_description" type="varchar(200)"/>
+
+            <!-- Dates -->
+            <column name="start_at" type="datetime"/>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+
+            <!-- FK for user -->
+            <column name="author_id" type="int"/>
+
+            <!-- FK for content -->
+            <column name="teaser_id" type="int"/>
+
+            <!-- FK for content -->
+            <column name="content_id" type="int"/>
+
+            <!-- FK for content -->
+            <column name="source_id" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_post_user_author_id" baseTableName="post"
+                                 baseColumnNames="author_id" referencedTableName="user" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_post_content_teaser_id" baseTableName="post"
+                                 baseColumnNames="teaser_id" referencedTableName="content" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_post_content_content_id" baseTableName="post"
+                                 baseColumnNames="content_id" referencedTableName="content" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_post_content_source_id" baseTableName="post"
+                                 baseColumnNames="source_id" referencedTableName="content" referencedColumnNames="id"/>
+
+        <createTable tableName="post_labels">
+            <column name="post_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="labels" type="varchar(32)"/>
+        </createTable>
+
+        <createIndex tableName="post" indexName="idx_start_at">
+            <column name="start_at"/>
+        </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_post_labels_post_post_id" baseTableName="post_labels"
+                                 baseColumnNames="post_id" referencedTableName="post" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
