@@ -25,6 +25,12 @@ public class SitemapController
     @Autowired
     private ApplicationProperties config;
 
+    /**
+     * Builds website sitemap in XML format
+     *
+     * @param request current request
+     * @return sitemap instance
+     */
     @RequestMapping(value = "${panda.urls.sitemap}", produces = "application/xml")
     public Sitemap sitemap(final HttpServletRequest request)
     {
@@ -51,6 +57,11 @@ public class SitemapController
         return sitemap;
     }
 
+    /**
+     * Fetches a list of posts from the post repository
+     *
+     * @return a list of posts or empty list if there is no posts in the system
+     */
     private List<Post> fetchSitemapPosts()
     {
         return Collections.emptyList();

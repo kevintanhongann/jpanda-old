@@ -12,7 +12,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 /**
  * Performs redirect or internal forward if there is a redirect item configured for a given request URI.
- * <p/>
+ * <p>
  * This component handles three types of redirects:
  * <ul>
  * <li>Internal - request is directed to a different route using {@link javax.servlet.RequestDispatcher}</li>
@@ -25,6 +25,11 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @Component
 public class RedirectsInterceptor extends HandlerInterceptorAdapter
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@code true} if there is no valid redirect configured for the current request; otherwise {@code false}.
+     */
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
             throws Exception
@@ -54,6 +59,13 @@ public class RedirectsInterceptor extends HandlerInterceptorAdapter
         return false;
     }
 
+    /**
+     * Looks up a redirect based on the given request URI
+     *
+     * @param request an HTTP request to get URI from
+     * @return an redirect item found for the given request or {@code null}
+     * @see javax.servlet.http.HttpServletRequest#getRequestURI()
+     */
     private Redirect findRedirectForRequest(final HttpServletRequest request)
     {
         // TODO: get redirect from repository based on the request URI
