@@ -18,6 +18,8 @@ panda:
     slug-preview: /preview/{slug}/{code}
     sitemap: /sitemap.xml
 spring:
+  thymeleaf:
+    cache: false
   jmx:
     enabled: false
   jpa:
