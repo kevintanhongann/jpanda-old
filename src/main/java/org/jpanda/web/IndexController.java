@@ -1,6 +1,7 @@
 package org.jpanda.web;
 
 import org.jpanda.config.ApplicationProperties;
+import org.jpanda.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +24,10 @@ import static java.time.temporal.TemporalAdjusters.*;
 public class IndexController
 {
     @Autowired
-    private ApplicationProperties properties;
+    private ApplicationProperties config;
+
+    @Autowired
+    private PostService postService;
 
     /**
      * Handles index (/) page
@@ -196,13 +200,13 @@ public class IndexController
 
     private String redirectWithUrl(final String key)
     {
-        return "redirect:" + properties.getUrls().get(key);
+        return "redirect:" + config.getUrls().get(key);
     }
 
     private String allPosts(final int page, final Model model)
     {
-//        model.addAttribute("posts",
-//                repository.findLivePosts(new PageRequest(page, pageSize, DESC, "startAt")));
+        model.addAttribute("posts", postService.findAll(page));
+
         return "index";
     }
 
@@ -232,11 +236,10 @@ public class IndexController
             end = end.with(lastDayOfYear());
         }
 
-        final Date startRange = Date.from(start.atZone(ZoneId.systemDefault()).toInstant());
-        final Date endRange = Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
+        final Date startDate = Date.from(start.atZone(ZoneId.systemDefault()).toInstant());
+        final Date endDate = Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
 
-//        model.addAttribute("posts",
-//                repository.findLivePostsByDateRange(startRange, endRange, new PageRequest(page, pageSize)));
+        model.addAttribute("posts", postService.findByDateRange(startDate, endDate, page));
 
         return "index";
     }

@@ -2,6 +2,8 @@ package org.jpanda.web;
 
 import org.jpanda.domain.Post;
 import org.jpanda.domain.PostType;
+import org.jpanda.services.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +15,9 @@ import java.util.EnumMap;
 @Controller
 public class PostController
 {
+    /**
+     * Mapping of page type to page template
+     */
     private static EnumMap<PostType, String> TYPE_TEMPLATE_MAP = new EnumMap<>(PostType.class);
 
     static
@@ -21,10 +26,13 @@ public class PostController
         TYPE_TEMPLATE_MAP.put(PostType.POST, "post");
     }
 
+    @Autowired
+    private PostService postService;
+
     @ModelAttribute
     public Post findPost(@PathVariable("slug") final String slug)
     {
-        return new Post();
+        return postService.findBySlug(slug);
     }
 
     @RequestMapping("/{slug:(?!\\d\\d\\d\\d$).+}")

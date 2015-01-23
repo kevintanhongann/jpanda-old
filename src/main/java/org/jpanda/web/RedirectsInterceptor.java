@@ -1,7 +1,8 @@
 package org.jpanda.web;
 
 import org.jpanda.domain.Redirect;
-import org.jpanda.domain.RedirectType;
+import org.jpanda.services.RedirectService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -12,7 +13,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 /**
  * Performs redirect or internal forward if there is a redirect item configured for a given request URI.
- * <p>
+ * <p/>
  * This component handles three types of redirects:
  * <ul>
  * <li>Internal - request is directed to a different route using {@link javax.servlet.RequestDispatcher}</li>
@@ -25,6 +26,9 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @Component
 public class RedirectsInterceptor extends HandlerInterceptorAdapter
 {
+    @Autowired
+    private RedirectService redirectService;
+
     /**
      * {@inheritDoc}
      *
@@ -68,17 +72,6 @@ public class RedirectsInterceptor extends HandlerInterceptorAdapter
      */
     private Redirect findRedirectForRequest(final HttpServletRequest request)
     {
-        // TODO: get redirect from repository based on the request URI
-        if (!request.getRequestURI().equals("/blah"))
-        {
-            return null;
-        }
-
-        final Redirect redirect = new Redirect();
-        redirect.setType(RedirectType.HTTP_301);
-        redirect.setFrom("/blah");
-        redirect.setTo("/2012");
-
-        return redirect;
+        return redirectService.findByUri(request.getRequestURI());
     }
 }

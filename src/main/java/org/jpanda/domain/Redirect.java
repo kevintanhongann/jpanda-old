@@ -5,8 +5,12 @@ package org.jpanda.domain;
  */
 public class Redirect
 {
+    private long id;
+
     private String toUrl;
+
     private String fromUrl;
+
     private RedirectType type;
 
     public RedirectType getType()
