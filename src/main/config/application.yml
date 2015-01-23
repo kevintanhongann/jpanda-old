@@ -14,8 +14,7 @@ panda:
     day: /{year:\d\d\d\d}/{month:\d\d}/{day:\d\d}
     day-redirect: /{year}/{month}/{day}
     day-page: /{year:\d\d\d\d}/{month:\d\d}/{day:\d\d}/page/{page:\d+}
-    slug: /{slug}
-    slug-path: /{slug}
+    slug: /{slug:(?!\d\d\d\d$).+}
     slug-preview: /preview/{slug}/{code}
     sitemap: /sitemap.xml
 spring:
