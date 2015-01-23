@@ -1,6 +1,6 @@
 package org.jpanda.web;
 
-import org.jpanda.ApplicationProperties;
+import org.jpanda.config.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +64,7 @@ public class IndexController
     @RequestMapping("${panda.urls.year}")
     public String listByYear(@PathVariable("year") final int year, final Model model)
     {
-        return postByDateRange(year, -1, -1, 0, model);
+        return populatePostsByDate(year, -1, -1, 0, model);
     }
 
     /**
@@ -83,7 +83,7 @@ public class IndexController
         {
             return redirectWithUrl("year-redirect");
         }
-        return postByDateRange(year, -1, -1, page - 1, model);
+        return populatePostsByDate(year, -1, -1, page - 1, model);
     }
 
     /**
@@ -98,7 +98,7 @@ public class IndexController
     public String listByMonth(@PathVariable("year") final int year, @PathVariable("month") final int month,
                               final Model model)
     {
-        return postByDateRange(year, month, -1, 0, model);
+        return populatePostsByDate(year, month, -1, 0, model);
     }
 
     /**
@@ -119,7 +119,7 @@ public class IndexController
         {
             return redirectWithUrl("month-redirect");
         }
-        return postByDateRange(year, month, -1, page - 1, model);
+        return populatePostsByDate(year, month, -1, page - 1, model);
     }
 
     /**
@@ -135,7 +135,7 @@ public class IndexController
     public String listByDay(@PathVariable("year") final int year, @PathVariable("month") final int month,
                             @PathVariable("day") final int day, final Model model)
     {
-        return postByDateRange(year, month, day, 0, model);
+        return populatePostsByDate(year, month, day, 0, model);
     }
 
     /**
@@ -159,7 +159,7 @@ public class IndexController
             return redirectWithUrl("day-redirect");
         }
 
-        return postByDateRange(year, month, day, page - 1, model);
+        return populatePostsByDate(year, month, day, page - 1, model);
     }
 
     /**
@@ -206,7 +206,7 @@ public class IndexController
         return "index";
     }
 
-    private String postByDateRange(final int year, final int month, final int day, final int page, final Model model)
+    private String populatePostsByDate(final int year, final int month, final int day, final int page, final Model model)
     {
         LocalDateTime start = LocalDateTime.now().with(LocalTime.MIN).withYear(year);
 
@@ -221,16 +221,12 @@ public class IndexController
 
         LocalDateTime end = start.with(LocalTime.MAX);
 
-        if (day > 0)
-        {
-            // do nothing if day is set
-        }
-        else if (month > 0)
+        if (day < 0 && month > 0)
         {
             start = start.with(firstDayOfMonth());
             end = end.with(lastDayOfMonth());
         }
-        else
+        else if (day < 0 && month < 0)
         {
             start = start.with(firstDayOfYear());
             end = end.with(lastDayOfYear());
