@@ -64,6 +64,16 @@ public class Post
         this.slug = slug;
     }
 
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
     public PostType getType()
     {
         return type;
@@ -77,5 +87,47 @@ public class Post
     public boolean isLive()
     {
         return false;
+    }
+
+    public String getContentText()
+    {
+        return content == null ? null : content.getText();
+    }
+
+    public void setContentText(String text)
+    {
+        if (content == null)
+        {
+            content = new Content();
+        }
+        content.setText(text);
+    }
+
+    public String getSourceText()
+    {
+        return source == null ? null : source.getText();
+    }
+
+    public void setSourceText(String text)
+    {
+        if (source == null)
+        {
+            source = new Content();
+        }
+        source.setText(text);
+    }
+
+    public String getTeaserText()
+    {
+        return teaser == null ? null : teaser.getText();
+    }
+
+    public void setTeaserText(String text)
+    {
+        if (teaser == null)
+        {
+            teaser = new Content();
+        }
+        teaser.setText(text);
     }
 }

@@ -53,10 +53,23 @@ public class ApplicationProperties
         this.sitemap = sitemap;
     }
 
+    /**
+     * Sitemap configuration
+     *
+     * @see <a href="https://support.google.com/webmasters/answer/183668?hl=en&ref_topic=6080646&rd=1">Build your sitemap</a>
+     */
     public static class Sitemap
     {
+        /**
+         * Default sitemap url priority
+         */
         private float priority = -1f;
 
+        /**
+         * Default sitemap url change frequency
+         *
+         * @see org.jpanda.domain.sitemap.ChangeFrequency
+         */
         private ChangeFrequency changeFrequency;
 
         public float getPriority()
@@ -78,7 +91,7 @@ public class ApplicationProperties
         {
             this.changeFrequency = changeFrequency;
         }
-        
+
         public boolean isChangeFrequency()
         {
             return changeFrequency != null;
