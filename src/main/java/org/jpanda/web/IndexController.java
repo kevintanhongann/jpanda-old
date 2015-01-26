@@ -38,6 +38,8 @@ public class IndexController
     @RequestMapping("${panda.urls.index}")
     public String index(final Model model)
     {
+        populateAllPosts(0, model);
+
         return "index";
     }
 
@@ -55,6 +57,9 @@ public class IndexController
         {
             return redirectWithUrl("index");
         }
+
+        populateAllPosts(page - 1, model);
+
         return "index";
     }
 
@@ -203,7 +208,7 @@ public class IndexController
         return "redirect:" + config.getUrls().get(key);
     }
 
-    private String allPosts(final int page, final Model model)
+    private String populateAllPosts(final int page, final Model model)
     {
         model.addAttribute("posts", postService.findAll(page));
 
