@@ -1,5 +1,10 @@
 package org.jpanda.domain;
 
-public interface RedirectRepository
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface RedirectRepository extends PagingAndSortingRepository<Redirect, Long>
 {
+    Redirect findByFromUrl(String from);
 }

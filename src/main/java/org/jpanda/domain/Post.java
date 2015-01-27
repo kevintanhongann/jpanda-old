@@ -2,6 +2,8 @@ package org.jpanda.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,29 +13,45 @@ import java.util.Set;
  *
  * @author T-PWK
  */
+@Entity
 public class Post
 {
     /**
      * Post identifier
      */
+    @Id
+    @GeneratedValue
     private long id;
 
+    @NotNull
+    @Column(unique = true, length = 100)
     private String slug;
 
+    @Column(length = 250)
     private String title;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Content content;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Content source;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Content teaser;
 
+    @Enumerated
     private PostType type;
 
+    @ElementCollection
     private Set<String> labels = new HashSet<>();
 
+    @ManyToOne
     private User author;
 
+    @Column(length = 200)
     private String metaDescription;
 
+    @Column(length = 100)
     private String metaTitle;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -42,6 +60,7 @@ public class Post
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date createdAt = new Date();
 
+    @Version
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date updatedAt;
 

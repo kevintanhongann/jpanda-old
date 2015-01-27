@@ -1,15 +1,22 @@
 package org.jpanda.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Entity representing a system user (a posts author)
  *
  * @author T-PWK
  */
+@Entity
 public class User
 {
     /**
      * User identifier
      */
+    @Id
+    @GeneratedValue
     private long id;
 
     private String name;
