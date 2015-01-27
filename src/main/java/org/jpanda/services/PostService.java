@@ -3,6 +3,8 @@ package org.jpanda.services;
 import org.jpanda.domain.Post;
 import org.springframework.data.domain.Page;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 
 public interface PostService
