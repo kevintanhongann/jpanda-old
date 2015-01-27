@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/blog
+    username: root
+    password: nimda
+    driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    cache: false
+  jpa:
+    show-sql: false

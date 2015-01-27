@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/test
+    username: _username_
+    password: _password_
+    driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    cache: false
+  jpa:
+    show-sql: true
