@@ -60,7 +60,7 @@
             <column name="slug" type="varchar(100)">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="title" type="varchar(255)"/>
+            <column name="title" type="varchar(250)"/>
             <column name="type" type="int"/>
 
             <!-- Meta -->
