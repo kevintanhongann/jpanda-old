@@ -8,3 +8,6 @@ spring:
     cache: false
   jpa:
     show-sql: false
+security:
+  user:
+    password: nimda

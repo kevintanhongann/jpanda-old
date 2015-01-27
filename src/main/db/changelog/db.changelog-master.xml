@@ -6,7 +6,7 @@
     <property name="clob.type" value="longtext" dbms="mysql"/>
     <property name="clob.type" value="text" dbms="postgresql"/>
 
-    <changeSet id="1" author="jpanda">
+    <changeSet id="0.0.1" author="jpanda">
         <comment>Initial setup</comment>
 
         <!-- ### Table: content ### -->
