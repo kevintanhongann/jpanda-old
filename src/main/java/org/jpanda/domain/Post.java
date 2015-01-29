@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class Post
     private Content teaser;
 
     @Enumerated
-    private PostType type;
+    private PostType type = PostType.POST;
 
     @ElementCollection
     private Set<String> labels = new HashSet<>();
@@ -49,9 +50,11 @@ public class Post
     private User author;
 
     @Column(length = 200)
+    @Size(max = 200)
     private String metaDescription;
 
     @Column(length = 100)
+    @Size(max = 100)
     private String metaTitle;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -71,6 +74,11 @@ public class Post
     public Post(String slug)
     {
         this.slug = slug;
+    }
+
+    public long getId()
+    {
+        return id;
     }
 
     public String getSlug()
@@ -105,7 +113,27 @@ public class Post
 
     public boolean isLive()
     {
-        return false;
+        return startAt != null ? startAt.before(new Date()) : false;
+    }
+
+    public String getMetaDescription()
+    {
+        return metaDescription;
+    }
+
+    public void setMetaDescription(String metaDescription)
+    {
+        this.metaDescription = metaDescription;
+    }
+
+    public String getMetaTitle()
+    {
+        return metaTitle;
+    }
+
+    public void setMetaTitle(String metaTitle)
+    {
+        this.metaTitle = metaTitle;
     }
 
     public String getContentText()
@@ -148,5 +176,25 @@ public class Post
             teaser = new Content();
         }
         teaser.setText(text);
+    }
+
+    public Date getStartAt()
+    {
+        return startAt;
+    }
+
+    public void setStartAt(Date startAt)
+    {
+        this.startAt = startAt;
+    }
+
+    public Date getCreatedAt()
+    {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt()
+    {
+        return updatedAt;
     }
 }
