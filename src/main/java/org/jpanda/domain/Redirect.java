@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Entity representing redirect
@@ -20,10 +21,12 @@ public class Redirect
 
     @NotNull
     @Column(length = 255, nullable = false, unique = true)
+    @Pattern(regexp = "/.*")
     private String toUrl;
 
     @NotNull
     @Column(length = 255, nullable = false)
+    @Pattern(regexp = "/.*")
     private String fromUrl;
 
     @NotNull

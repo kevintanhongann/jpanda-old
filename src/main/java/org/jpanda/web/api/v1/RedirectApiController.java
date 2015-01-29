@@ -2,6 +2,7 @@ package org.jpanda.web.api.v1;
 
 import org.jpanda.domain.Redirect;
 import org.jpanda.domain.RedirectRepository;
+import org.jpanda.domain.validation.RedirectValidator;
 import org.jpanda.web.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +24,15 @@ public class RedirectApiController
 {
     @Autowired
     private RedirectRepository repository;
+
+    @Autowired
+    private RedirectValidator validator;
+
+    @InitBinder
+    protected void initBinder(final WebDataBinder binder)
+    {
+        binder.setValidator(validator);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<Redirect> allRedirects(final Pageable pageable)
