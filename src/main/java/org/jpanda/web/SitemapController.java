@@ -4,6 +4,7 @@ import org.jpanda.config.ApplicationProperties;
 import org.jpanda.domain.Post;
 import org.jpanda.domain.sitemap.Sitemap;
 import org.jpanda.domain.sitemap.SitemapURL;
+import org.jpanda.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,8 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller generating sitemap.xml
@@ -25,6 +26,9 @@ public class SitemapController
     @Autowired
     private ApplicationProperties config;
 
+    @Autowired
+    private PostService postService;
+
     /**
      * Builds website sitemap in XML format
      *
@@ -36,25 +40,29 @@ public class SitemapController
     {
         final UriComponentsBuilder builder =
                 ServletUriComponentsBuilder.fromRequest(request).replacePath(config.getUrls().get("slug"));
-        final Sitemap sitemap = new Sitemap();
 
-        fetchSitemapPosts().forEach((post) -> {
-            final SitemapURL url = new SitemapURL(builder.buildAndExpand(post.getSlug()).encode().toUriString());
+        final List<SitemapURL> urls = fetchSitemapPosts().stream()
+                .map(post -> {
+                    final SitemapURL sitemap = new SitemapURL();
 
-            if (config.getSitemap().isChangeFrequency())
-            {
-                url.setChangeFrequency(config.getSitemap().getChangeFrequency());
-            }
+                    sitemap.setLocation(builder.buildAndExpand(post.getSlug()).encode().toUriString());
+                    sitemap.setLastModified(post.getUpdatedAt());
 
-            if (config.getSitemap().isPriority())
-            {
-                url.setPriority(config.getSitemap().getPriority());
-            }
+                    return sitemap;
+                })
+                .collect(Collectors.toList());
 
-            sitemap.addSitemapURL(url);
-        });
+        if (config.getSitemap().isChangeFrequency())
+        {
+            urls.forEach(url -> url.setChangeFrequency(config.getSitemap().getChangeFrequency()));
+        }
 
-        return sitemap;
+        if (config.getSitemap().isPriority())
+        {
+            urls.forEach(url -> url.setPriority(config.getSitemap().getPriority()));
+        }
+
+        return new Sitemap(urls);
     }
 
     /**
@@ -64,6 +72,6 @@ public class SitemapController
      */
     private List<Post> fetchSitemapPosts()
     {
-        return Collections.emptyList();
+        return postService.findAll(0).getContent();
     }
 }
