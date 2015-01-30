@@ -6,30 +6,31 @@
     <div class="ui two column centered padded grid">
         <div class="column">
             <form th:action="@{/admin/login}" method="post" class="ui form segment">
-                <h4 class="ui dividing header">Login Details</h4>
+                <h4 class="ui dividing header" th:text="#{login.head}">User Login</h4>
 
                 <div class="ui negative message" th:if="${param.error}">
                     <i class="close icon"/>
 
-                    <div class="header">Login Failure</div>
-                    <p>Invalid user name or password</p>
+                    <div class="header" th:text="#{login.err.invalidLogin.head}">Login Failure</div>
+                    <p th:text="#{login.err.invalidLogin.msg}">Invalid user name or password</p>
                 </div>
 
                 <div class="ui positive message" th:if="${param.logout}">
-                    <p>You have been logged out</p>
+                    <p th:text="#{login.err.logout.msg}">You have been logged out</p>
                 </div>
 
                 <div class="two fields">
                     <div class="required field">
-                        <label for="username">Username</label>
+                        <label for="username" th:text="#{login.username.label}">Username</label>
 
                         <div class="ui icon input">
-                            <input type="text" placeholder="Username" id="username" name="username"/>
+                            <input type="text" th:placeholder="#{login.username.placeholder}" id="username"
+                                   name="username"/>
                             <i class="user icon"></i>
                         </div>
                     </div>
                     <div class="required field">
-                        <label for="password">Password</label>
+                        <label for="password" th:text="#{login.password.label}">Password</label>
 
                         <div class="ui icon input">
                             <input type="password" id="password" name="password"/>
@@ -37,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="ui submit button">Log in</button>
+                <button type="submit" class="ui submit button" th:text="#{login.btn.submit}">Log in</button>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             </form>
         </div>
