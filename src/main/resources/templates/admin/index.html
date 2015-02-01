@@ -24,7 +24,17 @@
                         <i class="search link icon"></i>
                     </div>
                 </div>
-                <a href="#" onclick="document.forms['myFormName'].submit(); return false;" class="ui item">Logout</a>
+                <a href="#" onclick="document.forms['logout'].submit(); return false;" class="ui item">Logout</a>
+
+                <div class="ui simple dropdown item">
+                    <i class="dropdown icon"></i>
+                    Language
+                    <div class="menu">
+                        <a class="item"><i class="edit icon"></i>English</a>
+                        <a class="item">Russian</a>
+                        <a class="item">Spanish</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -42,9 +52,14 @@
         </div>
     </div>
 
-    <form name="myFormName" action="/admin/logout" method="post" class="ui icon input form">
+    <form name="logout" action="/admin/logout" method="post" class="ui icon input form">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     </form>
 </div>
+<script layout:fragment="script">
+    $('.ui.dropdown').dropdown({ on: 'hover' });
+
+
+</script>
 </body>
 </html>
