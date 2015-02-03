@@ -9,22 +9,22 @@
                 <h4 class="ui dividing header" th:text="#{login.head}">User Login</h4>
 
                 <div class="ui negative icon message" th:if="${param.error}">
-                    <i class="close icon"/> <i class="user icon"/>
+                    <i class="close icon"/> <i th:class="|#{login.err.invalidLogin.ico} icon|"/>
 
                     <div class="content">
                         <h3 class="header" th:text="#{login.err.invalidLogin.head}">Login Failure</h3>
 
-                        <p th:text="#{login.err.invalidLogin.msg}">Invalid user name or password</p>
+                        <p th:text="#{login.err.invalidLogin.txt}">Invalid user name or password</p>
                     </div>
                 </div>
 
                 <div class="ui positive icon message" th:if="${param.logout}">
-                    <i class="close icon"/> <i class="user icon"/>
+                    <i class="close icon"/> <i th:class="|#{login.msg.logout.ico} icon|"/>
 
                     <div class="content">
-                        <h3 class="header">Logout</h3>
+                        <h3 class="header" th:text="#{login.msg.logout.head}">Logout</h3>
 
-                        <p th:text="#{login.err.logout.msg}">You have been logged out</p>
+                        <p th:text="#{login.msg.logout.txt}">You have been logged out</p>
                     </div>
                 </div>
 
@@ -58,17 +58,9 @@
 </div>
 
 <script layout:fragment="script">
-(function($){
+jQuery(function($){
     $('.ui.form').form();
-})(jQuery);
-
-
-
-
-
-
-
-
-
+    $('.message .close').on('click', function(){ $(this).closest('.message').hide(); })
+});
 </script>
 </html>
