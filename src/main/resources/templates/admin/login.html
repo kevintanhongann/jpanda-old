@@ -8,15 +8,24 @@
             <form th:action="@{/admin/login}" method="post" class="ui form segment">
                 <h4 class="ui dividing header" th:text="#{login.head}">User Login</h4>
 
-                <div class="ui negative message" th:if="${param.error}">
-                    <i class="close icon"/>
+                <div class="ui negative icon message" th:if="${param.error}">
+                    <i class="close icon"/> <i class="user icon"/>
 
-                    <div class="header" th:text="#{login.err.invalidLogin.head}">Login Failure</div>
-                    <p th:text="#{login.err.invalidLogin.msg}">Invalid user name or password</p>
+                    <div class="content">
+                        <h3 class="header" th:text="#{login.err.invalidLogin.head}">Login Failure</h3>
+
+                        <p th:text="#{login.err.invalidLogin.msg}">Invalid user name or password</p>
+                    </div>
                 </div>
 
-                <div class="ui positive message" th:if="${param.logout}">
-                    <p th:text="#{login.err.logout.msg}">You have been logged out</p>
+                <div class="ui positive icon message" th:if="${param.logout}">
+                    <i class="close icon"/> <i class="user icon"/>
+
+                    <div class="content">
+                        <h3 class="header">Logout</h3>
+
+                        <p th:text="#{login.err.logout.msg}">You have been logged out</p>
+                    </div>
                 </div>
 
                 <div class="two fields">
@@ -38,10 +47,28 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="ui submit button" th:text="#{login.btn.submit}">Log in</button>
+                <div class="ui submit button">
+                    <i class="icon sign in"/>
+                    <span th:text="#{login.btn.submit}" th:remove="tag">Log in</span>
+                </div>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             </form>
         </div>
     </div>
 </div>
+
+<script layout:fragment="script">
+(function($){
+    $('.ui.form').form();
+})(jQuery);
+
+
+
+
+
+
+
+
+
+</script>
 </html>
