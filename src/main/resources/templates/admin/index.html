@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity"
       layout:decorator="admin/layout">
 <body>
 <div layout:fragment="content" class="ui page padded grid">
@@ -10,16 +11,16 @@
             <a class="active item" href="/admin">
                 <i class="cloud icon"></i> Dashboard
             </a>
-            <a class="item" href="/admin">
+            <a class="item" href="/admin" sec:authorize="hasRole('ROLE_PAGES') || hasRole('ROLE_ADMIN')">
                 <i class="file text outline icon"></i> Pages
             </a>
-            <a class="item" href="/admin">
+            <a class="item" href="/admin" sec:authorize="hasRole('ROLE_CONTENT') || hasRole('ROLE_ADMIN')">
                 <i class="database icon"></i> Content
             </a>
-            <a class="item" href="/admin">
+            <a class="item" href="/admin" sec:authorize="hasRole('ROLE_ADMIN')">
                 <i class="user icon"></i> Administration
             </a>
-            <a class="item" href="/admin">
+            <a class="item" href="/admin" sec:authorize="hasRole('ROLE_ANALYTICS') || hasRole('ROLE_ADMIN')">
                 <i class="wifi icon"></i> Analytics
             </a>
 
@@ -30,19 +31,29 @@
                         <i class="search link icon"></i>
                     </div>
                 </div>
-                <a href="#" class="ui item logout">
-                    Logout <i class="sign out icon"></i>
-                </a>
+                <div class="ui simple dropdown item">
+                    <i class="dropdown icon"></i>
+                    <i class="user icon"></i>
+                    Welcome <span sec:authentication="name">user name</span>
+
+                    <div class="menu">
+                        <a class="item logout"><i class="sign out icon"></i> Logout</a>
+                        <a class="item logout"><i class="sign out icon"></i> Logout</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="sixteen wide column">
-        <h2 class="ui header segment">
-            <i class="cloud icon"/>
+        <h2 class="ui header">
+            <i class="blue cloud icon"/>
 
-            <div class="content">Account Settings
-                <div class="sub header">Manage your account settings and set e-mail preferences.</div>
+            <div class="content">Dashboard
+
+                <div sec:authentication="name" class="sub header">
+                    The value of the "name" property of the authentication object should appear here.
+                </div>
             </div>
         </h2>
         <div class="row">
@@ -55,7 +66,8 @@
     </form>
 </div>
 <script layout:fragment="script">
-    $('.ui.item.logout').on('click', function(){ $('#logout').submit(); });
+    $('.item.logout').on('click', function(){ $('#logout').submit(); });
+
 </script>
 </body>
 </html>
