@@ -59,8 +59,8 @@
 
 <script layout:fragment="script">
 jQuery(function($){
-    $('.ui.form').form();
-    $('.message .close').on('click', function(){ $(this).closest('.message').hide(); })
+    $('.ui.form').form(null, { onSuccess: function(){ $(this).addClass('loading'); }});
+    $('.message .close').on('click', function(){ $(this).closest('.message').transition('scale out'); });
 });
 </script>
 </html>
