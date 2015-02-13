@@ -10,15 +10,16 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @EnableWebSecurity
 @SpringBootApplication
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class App
 {
@@ -38,14 +39,6 @@ public class App
         {
             registry.addInterceptor(redirectsInterceptor).excludePathPatterns("/api/**", "/admin/**", "/error");
         }
-
-        @Override
-        public void addViewControllers(final ViewControllerRegistry registry)
-        {
-            registry.addViewController("/admin/login").setViewName("admin/login");
-            registry.addViewController("/admin").setViewName("admin/index");
-            registry.setOrder(-1);
-        }
     }
 
     @Configuration
@@ -64,7 +57,10 @@ public class App
         protected void configure(final AuthenticationManagerBuilder auth) throws Exception
         {
             auth.inMemoryAuthentication()
-                    .withUser("admin").password("admin").roles("USER", "ADMIN");
+                    .withUser("admin").password("admin").roles("USER", "ADMIN")
+                    .and().withUser("user").password("132").roles("USER")
+                    .and().withUser("analytics").password("123").roles("USER", "ANALYTICS")
+                    .and().withUser("content").password("123").roles("USER", "CONTENT");
         }
     }
 
