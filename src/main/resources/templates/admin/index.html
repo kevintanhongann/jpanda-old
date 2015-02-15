@@ -2,40 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.thymeleaf.org/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity"
-      layout:decorator="admin/layout" ng-app="jpanda">
+      layout:decorator="admin/layout" ng-app="panda">
 <body>
 <div layout:fragment="content" class="ui page padded grid">
     <div class="sixteen wide column" ng-controller="NavCtrl">
         <div class="ui secondary pointing menu">
             <a class="item" href="#/" ng-class="{active:is('index')}">
-                <i class="cloud icon"></i> Dashboard
+                <i class="cloud icon"></i>
+                <th:block th:text="#{index.menu.dashboard}">Dashboard</th:block>
             </a>
 
             <div class="ui dropdown item"
                  sec:authorize="hasRole('ROLE_CONTENT') || hasRole('ROLE_ADMIN')">
                 <i class="database icon"></i>
-                <div class="text">Content</div>
+
+                <th:block th:text="#{index.menu.content}">Content</th:block>
                 <i class="dropdown icon"></i>
+
                 <div class="menu">
-                    <a class="item" href="#/content/pages"><i class="file text outline icon"></i> Pages</a>
+                    <a class="item" href="#/content/pages"><i class="file text outline icon"></i>
+                        <th:block th:text="#{index.menu.pages}">Pages</th:block>
+                    </a>
                     <a class="item" href="#/content/announcement"
                        sec:authorize="hasRole('ROLE_MANAGER') || hasRole('ROLE_ADMIN')">
-                        <i class="announcement icon"></i> Announcement</a>
+                        <i class="announcement icon"></i>
+                        <th:block th:text="#{index.menu.announcement}">Announcement</th:block>
+                    </a>
                 </div>
             </div>
-            <div class="ui dropdown item" ng-class="{active:is('admin')}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <div class="ui dropdown item" sec:authorize="hasRole('ROLE_ADMIN')">
                 <i class="dropdown icon"></i>
-                <i class="settings icon"></i> Administration
+                <i class="settings icon"></i>
+                <th:block th:text="#{index.menu.administration}">Administration</th:block>
                 <div class="menu">
-                    <a class="item active" href="#/admin/users"> <i class="user icon"></i> Users</a>
-                    <a class="item" href="#/admin/groups"> <i class="users icon"></i> Groups</a>
-                    <a class="item" href="#/admin/redirects"> <i class="share icon"></i> Redirects</a>
-
+                    <a class="item active" href="#/admin/users"> <i class="user icon"></i>
+                        <th:block th:text="#{index.menu.users}">Users</th:block>
+                    </a>
+                    <a class="item" href="#/admin/groups"> <i class="users icon"></i>
+                        <th:block th:text="#{index.menu.groups}">Groups</th:block>
+                    </a>
+                    <a class="item" href="#/admin/redirects"> <i class="share icon"></i>
+                        <th:block th:text="#{index.menu.redirects}">Redirects</th:block>
+                    </a>
                 </div>
             </div>
             <a class="item" ng-class="{active:is('analytics')}" href="#/analytics"
                sec:authorize="hasRole('ROLE_ANALYTICS') || hasRole('ROLE_ADMIN')">
-                <i class="wifi icon"></i> Analytics
+                <i class="wifi icon"></i>
+                <th:block th:text="#{index.menu.analytics}">Analytics</th:block>
             </a>
 
             <div class="right menu">
@@ -51,10 +65,14 @@
                     <span sec:authentication="name">user</span>
 
                     <div class="menu">
-                        <a class="item"><i class="user icon"></i> Profile</a>
+                        <a class="item" href="#/profile"><i class="user icon"></i>
+                            <th:block th:text="#{index.menu.profile}">Profile</th:block>
+                        </a>
 
                         <div class="divider"></div>
-                        <a class="item logout"><i class="power icon"></i> Logout</a>
+                        <a class="item logout"><i class="power icon"></i>
+                            <th:block th:text="#{index.menu.logout}">Logout</th:block>
+                        </a>
                     </div>
                 </div>
             </div>

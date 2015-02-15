@@ -1,8 +1,9 @@
-var jpanda = angular.module('jpanda', ['ngRoute']);
+var panda = angular.module('panda', ['ngRoute']);
 
-jpanda.config(['$routeProvider', function($route){
+panda.config(['$routeProvider', function($route){
     $route
         .when('/', { templateUrl:'/admin/partial/index', controller: 'IndexCtrl' })
+        .when('/profile', { templateUrl:'/admin/partial/profile', controller: 'ProfileCtrl' })
         .when('/content/pages', { templateUrl:'/admin/partial/pages', controller: 'PagesCtrl' })
         .when('/content/announcement', { templateUrl:'/admin/partial/announcement', controller: 'AnnouncementCtrl' })
         .when('/admin/users', { templateUrl:'/admin/partial/users', controller: 'UsersCtrl' })
@@ -12,7 +13,7 @@ jpanda.config(['$routeProvider', function($route){
         .otherwise({ redirectTo: '/' });
 }]);
 
-jpanda.controller('NavCtrl', ['$scope', function ($scope) {
+panda.controller('NavCtrl', ['$scope', function ($scope) {
     $scope.$root.$on('nav:head', function(event, header){
         $scope.header = header;
     });
@@ -21,30 +22,33 @@ jpanda.controller('NavCtrl', ['$scope', function ($scope) {
     };
 }]);
 
-jpanda.controller('IndexCtrl', ['$scope', function ($scope) {
+panda.controller('IndexCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'index');
 }]);
 
-jpanda.controller('PagesCtrl', ['$scope', function ($scope) {
+panda.controller('ProfileCtrl', ['$scope', function ($scope) {
+}]);
+
+panda.controller('PagesCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'content');
 }]);
 
-jpanda.controller('AnnouncementCtrl', ['$scope', function ($scope) {
+panda.controller('AnnouncementCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'content');
 }]);
 
-jpanda.controller('UsersCtrl', ['$scope', function ($scope) {
+panda.controller('UsersCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'admin');
 }]);
 
-jpanda.controller('GroupsCtrl', ['$scope', function ($scope) {
+panda.controller('GroupsCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'admin');
 }]);
 
-jpanda.controller('RedirectsCtrl', ['$scope', function ($scope) {
+panda.controller('RedirectsCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'admin');
 }]);
 
-jpanda.controller('AnalyticsCtrl', ['$scope', function ($scope) {
+panda.controller('AnalyticsCtrl', ['$scope', function ($scope) {
     $scope.$root.$emit('nav:head', 'analytics');
 }]);
