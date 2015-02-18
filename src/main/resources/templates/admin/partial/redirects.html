@@ -1,110 +1,109 @@
 <div class="ui grid">
     <div class="four wide column">
         <div class="ui vertical menu">
-            <div class="header item">
-                <i class="user icon"></i>
-                Communities
-            </div>
             <div class="item">
-                College
-                <div class="menu">
-                    <a class="item">Baseball</a>
-                    <a class="item">Basketball</a>
-                    <a class="item">Golf</a>
+                <div class="ui transparent icon input">
+                    <input type="text" placeholder="Search..."/><i class="search icon"></i>
                 </div>
             </div>
-            <a class="item">
-                Dance
-            </a>
-            <a class="item">
-                Aerobics
-            </a>
-
             <div class="header item">
-                <i class="globe icon"></i>
-                Cities
+                Filter
             </div>
-            <a class="item">
-                New York
-            </a>
-            <a class="item">
-                Montreal
-            </a>
-            <a class="item">
-                Los Angeles
-            </a>
-            <a class="item">
-                San Francisco
-            </a>
+            <div class="item">
+                <strong>Live</strong>
 
-            <div class="header item">
-                <i class="icon calendar"></i>
-                Months
+                <div class="menu">
+                    <a class="item"><i class="green globe icon"></i>Active</a>
+                    <a class="item"><i class="red globe icon"></i>Inactive</a>
+                </div>
             </div>
-            <a class="item">
-                August
+            <div class="item">
+                <strong>Type</strong>
+
+                <div class="menu">
+                    <a class="item"><i class="exchange icon"></i>Internal</a>
+                    <a class="item"><i class="reply all icon"></i>Permanent (301)</a>
+                    <a class="item"><i class="reply icon"></i>Temporary (302)</a>
+                </div>
+            </div>
+            <div class="header item">
+                Actions
+            </div>
+            <a class="item" ng-click="reload()">
+                <i class="blue refresh icon" ng-class="{loading:loading}"></i> Reload
             </a>
-            <a class="item">
-                June
+            <a class="item" ng-click="new()">
+                <i class="blue plus icon"></i> New
             </a>
         </div>
 
     </div>
     <div class="twelve wide column">
-        <table class="ui table">
+        <table class="ui blue table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Registration Date</th>
-                <th>E-mail address</th>
-                <th>Premium Plan</th>
+                <th class="one wide"></th>
+                <th class="seven wide">From</th>
+                <th class="seven wide">To</th>
+                <th class="one wide">Type</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>John Lilki</td>
-                <td>September 14, 2013</td>
-                <td>jhlilk22@yahoo.com</td>
-                <td>No</td>
-            </tr>
-            <tr>
-                <td>Jamie Harington</td>
-                <td>January 11, 2014</td>
-                <td>jamieharingonton@yahoo.com</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>Jill Lewis</td>
-                <td>May 11, 2014</td>
-                <td>jilsewris22@yahoo.com</td>
-                <td>Yes</td>
+            <tr ng-repeat="item in redirects.content">
+                <td><a ng-click="remove(item)" href=""><i class="power icon"></i></a></td>
+                <td>{{item.from}}</td>
+                <td>{{item.to}}</td>
+                <td ng-switch="item.type">
+                    <i ng-switch-when="HTTP_302" class="reply icon"></i>
+                    <i ng-switch-when="HTTP_301" class="reply all icon"></i>
+                    <i ng-switch-when="INTERNAL" class="exchange icon"></i>
+                </td>
             </tr>
             </tbody>
         </table>
-        <div class="ui pagination menu">
-            <a class="icon item">
-                <i class="left arrow icon"></i>
-            </a>
-            <a class="active item">
-                1
-            </a>
 
-            <div class="disabled item">
-                ...
+        <div class="two column ui grid">
+            <div class="column">
+                <span>Show rows: </span>
+
+                <div class="ui upward compact selection dropdown">
+                    <i class="dropdown icon"></i>
+
+                    <div class="default text">10</div>
+                    <div class="menu">
+                        <div class="item" ng-repeat="s in sizes" ng-click="setSize(s)">{{s}}</div>
+                    </div>
+                </div>
             </div>
-            <a class="item">
-                10
-            </a>
-            <a class="item">
-                11
-            </a>
-            <a class="item">
-                12
-            </a>
-            <a class="icon item">
-                <i class="right arrow icon"></i>
-            </a>
+            <div class="right floated right aligned column">
+                <div class="ui pagination menu">
+                    <a class="icon item">
+                        <i class="left arrow icon"></i>
+                    </a>
+                    <a class="active item">
+                        1
+                    </a>
+
+                    <div class="disabled item">
+                        ...
+                    </div>
+                    <a class="item">
+                        10
+                    </a>
+                    <a class="item">
+                        {{redirects.totalPages}}
+                    </a>
+                    <a class="item">
+                        {{redirects.totalElements}}
+                    </a>
+                    <a class="icon item">
+                        <i class="right arrow icon"></i>
+                    </a>
+                </div>
+            </div>
         </div>
+
+
     </div>
 </div>
 
