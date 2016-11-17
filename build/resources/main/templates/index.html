@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org/thymeleaf/layout"
+      layout:decorator="layout">
+<div layout:fragment="content">
+    <div class="page-header">
+        <h1>Example page header
+            <small>Subtext for header</small>
+        </h1>
+    </div>
+    <p th:text="|Total elements: ${posts.totalElements}|"></p>
+
+    <p th:text="|Total pages: ${posts.totalPages}|"></p>
+
+    <div class="media" th:each="post : ${posts}">
+        <div class="media-left">
+            <a href="#"><img class="media-object" data-src="holder.js/64x64" alt="64x64"
+                             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg=="
+                             data-holder-rendered="true" style="width: 64px; height: 64px;"/></a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" th:text="${post.title}"></h4>
+
+            <p th:text="${post.teaserText}"></p>
+        </div>
+    </div>
+
+</div>
+</html>

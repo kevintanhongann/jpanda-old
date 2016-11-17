@@ -17,3 +17,8 @@ hs_err_pid*
 
 # Local configuration
 application.yml
+
+.gradle/
+
+gradle/
+
