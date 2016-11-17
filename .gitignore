@@ -22,3 +22,5 @@ application.yml
 
 gradle/
 
+build/
+
